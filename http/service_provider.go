@@ -17,18 +17,21 @@ const Binding = "goravel.http"
 
 var (
 	TranslationFacade translation.Translation
-	ConfigFacade      config.Config
 	CacheFacade       cache.Cache
 	LogFacade         log.Log
 	ExceptionFacade   exception.Exception
 	RateLimiterFacade http.RateLimiter
 	ValidationFacade  validation.Validation
+	ConfigFacade      config.Config
 )
 
 type ServiceProvider struct {
 }
 
 func (http *ServiceProvider) Register(app foundation.Application) {
+	app.Singleton(Binding, func(app foundation.Application) (any, error) {
+		return NewContext(app.MakeConfig()), nil
+	})
 	app.Singleton(Binding, func(app foundation.Application) (any, error) {
 		return NewRateLimiter(), nil
 	})
