@@ -42,6 +42,8 @@ import (
 
 	schedule "github.com/goravel/framework/contracts/schedule"
 
+	translation "github.com/goravel/framework/contracts/translation"
+
 	validation "github.com/goravel/framework/contracts/validation"
 )
 
@@ -425,6 +427,22 @@ func (_m *Application) MakeStorage() filesystem.Storage {
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(filesystem.Storage)
+		}
+	}
+
+	return r0
+}
+
+// MakeTranslation provides a mock function with given fields:
+func (_m *Application) MakeTranslation() translation.Translation {
+	ret := _m.Called()
+
+	var r0 translation.Translation
+	if rf, ok := ret.Get(0).(func() translation.Translation); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(translation.Translation)
 		}
 	}
 

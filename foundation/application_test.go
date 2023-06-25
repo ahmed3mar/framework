@@ -33,6 +33,7 @@ import (
 	"github.com/goravel/framework/route"
 	"github.com/goravel/framework/schedule"
 	"github.com/goravel/framework/support/file"
+	"github.com/goravel/framework/translation"
 	"github.com/goravel/framework/validation"
 )
 
@@ -363,4 +364,11 @@ func (s *ApplicationTestSuite) TestMakeValidation() {
 	serviceProvider.Register(s.app)
 
 	s.NotNil(s.app.MakeValidation())
+}
+
+func (s *ApplicationTestSuite) TestMakeTranslation() {
+	serviceProvider := &translation.ServiceProvider{}
+	serviceProvider.Register(s.app)
+
+	s.NotNil(s.app.MakeTranslation())
 }

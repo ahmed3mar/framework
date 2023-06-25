@@ -8,6 +8,7 @@ import (
 	"github.com/goravel/framework/contracts/foundation"
 	"github.com/goravel/framework/contracts/http"
 	"github.com/goravel/framework/contracts/log"
+	"github.com/goravel/framework/contracts/translation"
 	"github.com/goravel/framework/contracts/validation"
 	"github.com/goravel/framework/http/console"
 )
@@ -15,6 +16,7 @@ import (
 const Binding = "goravel.http"
 
 var (
+	TranslationFacade translation.Translation
 	ConfigFacade      config.Config
 	CacheFacade       cache.Cache
 	LogFacade         log.Log
@@ -38,6 +40,7 @@ func (http *ServiceProvider) Boot(app foundation.Application) {
 	LogFacade = app.MakeLog()
 	ValidationFacade = app.MakeValidation()
 	ExceptionFacade = app.MakeException()
+	TranslationFacade = app.MakeTranslation()
 
 	http.registerCommands(app)
 }
