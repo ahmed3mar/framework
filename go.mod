@@ -5,6 +5,7 @@ go 1.18
 replace github.com/gookit/validate => ../validate
 
 require (
+	github.com/DataDog/gostackparse v0.6.0
 	github.com/RichardKnop/machinery/v2 v2.0.11
 	github.com/gabriel-vasile/mimetype v1.4.2
 	github.com/glebarez/go-sqlite v1.21.1

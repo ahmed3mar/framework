@@ -1,6 +1,8 @@
 package exception
 
 import (
+	"bytes"
+	"github.com/DataDog/gostackparse"
 	"github.com/goravel/framework/contracts/config"
 	"github.com/goravel/framework/contracts/foundation"
 	"github.com/goravel/framework/contracts/http"
@@ -104,10 +106,17 @@ func (h *Handler) shouldReturnJson(ctx http.Context, e error) bool {
 
 func (h *Handler) prepareJson(ctx http.Context, e error) http.Json {
 	if h.Config.GetBool("app.debug") {
+
+		// Parse it
+		goroutines, _ := gostackparse.Parse(bytes.NewReader(debug.Stack()))
+
+		// remove 4 items from .Stack
+		goroutines[0].Stack = goroutines[0].Stack[7:]
+
 		return http.Json{
 			"message":   cast.ToString(e),
 			"exception": e,
-			"trace":     string(debug.Stack()),
+			"trace":     goroutines[0],
 		}
 	}
 	return http.Json{

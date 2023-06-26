@@ -11,12 +11,11 @@ func Recover(config ...Config) httpcontract.Middleware {
 	// Set default config
 	cfg := configDefault(config...)
 
-	return func(ctx httpcontract.Context) {
+	return func(ctx httpcontract.Context) error {
 
 		// Don't execute middleware if Next returns true
 		if cfg.Next != nil && cfg.Next(ctx) {
-			ctx.Request().Next()
-			return
+			return ctx.Request().Next()
 		}
 
 		// Catch panics
@@ -34,13 +33,13 @@ func Recover(config ...Config) httpcontract.Middleware {
 				}
 
 				// Set error that will call the global error handler
-				ctx.Request().AbortWithError(errors.New("Unknown error"))
+				ctx.Request().AbortWithError(errors.New("unknown error"))
 				return
 			}
 		}()
 
 		// Return err if exist, else move to next handler
-		ctx.Request().Next()
+		return ctx.Request().Next()
 	}
 }
 

@@ -55,7 +55,7 @@ type Request interface {
 	AbortWithStatusJson(code int, jsonObj any)
 	AbortWithError(err error)
 
-	Next()
+	Next() error
 	Origin() *http.Request
 
 	Validate(rules map[string]string, options ...validation.Option) (validation.Validator, error)
