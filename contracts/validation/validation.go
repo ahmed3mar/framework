@@ -27,6 +27,7 @@ type Errors interface {
 type Data interface {
 	Get(key string) (val any, exist bool)
 	Set(key string, val any) error
+	AddError(field, validator, msg string)
 }
 
 type Rule interface {

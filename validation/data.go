@@ -6,6 +6,11 @@ type Data struct {
 	data validate.DataFace
 }
 
+func (d *Data) AddError(field, validator, msg string) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewData(data validate.DataFace) *Data {
 	return &Data{data}
 }

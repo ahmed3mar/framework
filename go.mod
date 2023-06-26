@@ -2,6 +2,8 @@ module github.com/goravel/framework
 
 go 1.18
 
+replace "github.com/gookit/validate" => "../validate"
+
 require (
 	github.com/RichardKnop/machinery/v2 v2.0.11
 	github.com/gabriel-vasile/mimetype v1.4.2
