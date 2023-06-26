@@ -2,7 +2,6 @@ package route
 
 import (
 	"fmt"
-
 	"github.com/gookit/color"
 
 	"github.com/goravel/framework/contracts/config"

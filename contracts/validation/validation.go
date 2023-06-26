@@ -22,6 +22,7 @@ type Errors interface {
 	Get(key string) map[string]string
 	All() map[string]map[string]string
 	Has(key string) bool
+	Error() string
 }
 
 type Data interface {

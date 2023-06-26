@@ -2,7 +2,7 @@ module github.com/goravel/framework
 
 go 1.18
 
-replace "github.com/gookit/validate" => "../validate"
+replace github.com/gookit/validate => ../validate
 
 require (
 	github.com/RichardKnop/machinery/v2 v2.0.11
@@ -17,7 +17,7 @@ require (
 	github.com/golang/protobuf v1.5.3
 	github.com/google/wire v0.5.0
 	github.com/gookit/color v1.5.3
-	github.com/gookit/validate v1.4.6
+	github.com/gookit/validate v0.0.0-00010101000000-000000000000
 	github.com/goravel/file-rotatelogs/v2 v2.4.1
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/hashicorp/go-multierror v1.1.1

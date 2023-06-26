@@ -6,6 +6,11 @@ type Errors struct {
 	errors validate.Errors
 }
 
+func (r *Errors) Error() string {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewErrors(errors validate.Errors) *Errors {
 	return &Errors{errors}
 }
