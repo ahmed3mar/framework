@@ -23,6 +23,10 @@ type OrmImpl struct {
 }
 
 func NewOrmImpl(ctx context.Context, config config.Config, connection string, query ormcontract.Query) (*OrmImpl, error) {
+	if ctx != nil {
+		query = query.WithContext(ctx)
+	}
+
 	return &OrmImpl{
 		ctx:        ctx,
 		config:     config,
@@ -98,6 +102,5 @@ func (r *OrmImpl) Transaction(txFunc func(tx ormcontract.Transaction) error) err
 
 func (r *OrmImpl) WithContext(ctx context.Context) ormcontract.Orm {
 	instance, _ := NewOrmImpl(ctx, r.config, r.connection, r.query)
-
 	return instance
 }

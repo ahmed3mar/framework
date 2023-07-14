@@ -17,10 +17,15 @@ func NewApplication(queue queuecontract.Queue) *Application {
 }
 
 func (app *Application) Register(events map[event.Event][]event.Listener) {
-	app.events = events
+
+	if app.events == nil {
+		app.events = make(map[event.Event][]event.Listener)
+	}
+
 	var jobs []queuecontract.Job
 
-	for _, listeners := range events {
+	for event, listeners := range events {
+		app.events[event] = listeners
 		for _, listener := range listeners {
 			jobs = append(jobs, listener)
 		}

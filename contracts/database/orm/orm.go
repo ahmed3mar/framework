@@ -24,6 +24,7 @@ type Transaction interface {
 
 //go:generate mockery --name=Query
 type Query interface {
+	WithContext(ctx context.Context) Query
 	Association(association string) Association
 	Begin() (Transaction, error)
 	Driver() Driver

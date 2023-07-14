@@ -1,14 +1,17 @@
 package validation
 
-import "github.com/gookit/validate"
+import (
+	"github.com/davecgh/go-spew/spew"
+	"github.com/gookit/validate"
+)
 
 type Errors struct {
 	errors validate.Errors
 }
 
 func (r *Errors) Error() string {
-	//TODO implement me
-	panic("implement me")
+	spew.Dump(r.errors)
+	return r.errors.One()
 }
 
 func NewErrors(errors validate.Errors) *Errors {

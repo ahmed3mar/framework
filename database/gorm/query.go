@@ -28,6 +28,11 @@ type QueryImpl struct {
 	withoutEvents bool
 }
 
+func (r *QueryImpl) WithContext(ctx context.Context) ormcontract.Query {
+	r.instance = r.instance.WithContext(ctx)
+	return r
+}
+
 func NewQueryImpl(ctx context.Context, config config.Config, gorm Gorm) (*QueryImpl, error) {
 	tempConfig = config
 	db, err := gorm.Make()
