@@ -26,7 +26,7 @@ type Route interface {
 	Middleware(middlewares ...contractshttp.Middleware) Route
 
 	Any(relativePath string, handler contractshttp.HandlerFunc)
-	Get(relativePath string, handler contractshttp.HandlerFunc)
+	Get(relativePath string, handler contractshttp.HandlerFunc, name ...string)
 	Post(relativePath string, handler contractshttp.HandlerFunc)
 	Delete(relativePath string, handler contractshttp.HandlerFunc)
 	Patch(relativePath string, handler contractshttp.HandlerFunc)

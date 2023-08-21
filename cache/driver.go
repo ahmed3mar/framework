@@ -2,8 +2,6 @@ package cache
 
 import (
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
-
 	"github.com/goravel/framework/contracts/cache"
 	"github.com/goravel/framework/contracts/config"
 )
@@ -25,7 +23,6 @@ func NewDriverImpl(config config.Config) *DriverImpl {
 
 func (d *DriverImpl) New(store string) (cache.Driver, error) {
 	driver := d.config.GetString(fmt.Sprintf("cache.stores.%s.driver", store))
-	spew.Dump(store, driver)
 	switch driver {
 	case "memory":
 		return d.memory()

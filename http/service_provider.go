@@ -13,7 +13,9 @@ import (
 	"github.com/goravel/framework/http/console"
 )
 
-const Binding = "goravel.http"
+const BindingRateLimiter = "goravel.rate_limiter"
+
+type ServiceProvider struct{}
 
 var (
 	TranslationFacade translation.Translation
@@ -25,23 +27,16 @@ var (
 	ConfigFacade      config.Config
 )
 
-type ServiceProvider struct {
-}
-
 func (http *ServiceProvider) Register(app foundation.Application) {
-	app.Singleton(Binding, func(app foundation.Application) (any, error) {
-		return NewContext(app.MakeConfig()), nil
-	})
-	app.Singleton(Binding, func(app foundation.Application) (any, error) {
+	app.Singleton(BindingRateLimiter, func(app foundation.Application) (any, error) {
 		return NewRateLimiter(), nil
 	})
 }
 
 func (http *ServiceProvider) Boot(app foundation.Application) {
-	ConfigFacade = app.MakeConfig()
 	CacheFacade = app.MakeCache()
-	LogFacade = app.MakeLog()
-	ValidationFacade = app.MakeValidation()
+	ConfigFacade = app.MakeConfig()
+	RateLimiterFacade = app.MakeRateLimiter()
 	ExceptionFacade = app.MakeException()
 	TranslationFacade = app.MakeTranslation()
 

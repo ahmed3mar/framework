@@ -2,6 +2,7 @@ package route
 
 import (
 	"fmt"
+
 	"github.com/gookit/color"
 
 	"github.com/goravel/framework/contracts/config"
@@ -10,18 +11,13 @@ import (
 
 type Driver string
 
-const (
-	DriverGin   Driver = "gin"
-	DriverFiber Driver = "fiber"
-)
-
 type Route struct {
 	route.Engine
 	config config.Config
 }
 
 func NewRoute(config config.Config) *Route {
-	defaultDriver := config.GetString("http.driver")
+	defaultDriver := config.GetString("http.default")
 	if defaultDriver == "" {
 		color.Redln("[http] please set default driver")
 
@@ -42,32 +38,15 @@ func NewRoute(config config.Config) *Route {
 }
 
 func NewDriver(config config.Config, driver string) (route.Engine, error) {
-	switch Driver(driver) {
-	case DriverGin:
-		driver, ok := config.Get("http.drivers.gin.route").(route.Engine)
-		if ok {
-			return driver, nil
-		}
-
-		driverCallback, ok := config.Get("http.drivers.gin.route").(func() (route.Engine, error))
-		if ok {
-			return driverCallback()
-		}
-
-		return nil, fmt.Errorf("init gin route driver fail: route must be implement route.Engine or func() (route.Engine, error)")
-	case DriverFiber:
-		driver, ok := config.Get("http.drivers.fiber.route").(route.Engine)
-		if ok {
-			return driver, nil
-		}
-
-		driverCallback, ok := config.Get("http.drivers.fiber.route").(func() (route.Engine, error))
-		if ok {
-			return driverCallback()
-		}
-
-		return nil, fmt.Errorf("init fiber route driver fail: route must be implement route.Engine or func() (route.Engine, error)")
+	engine, ok := config.Get("http.drivers." + driver + ".route").(route.Engine)
+	if ok {
+		return engine, nil
 	}
 
-	return nil, fmt.Errorf("invalid driver: %s, only support gin, fiber", driver)
+	engineCallback, ok := config.Get("http.drivers." + driver + ".route").(func() (route.Engine, error))
+	if ok {
+		return engineCallback()
+	}
+
+	return nil, fmt.Errorf("init route driver fail: route must be implement route.Engine or func() (route.Engine, error)")
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/goravel/framework/contracts/console"
 	"github.com/goravel/framework/contracts/crypt"
 	"github.com/goravel/framework/contracts/database/orm"
+	"github.com/goravel/framework/contracts/database/seeder"
 	"github.com/goravel/framework/contracts/event"
 	"github.com/goravel/framework/contracts/exception"
 	"github.com/goravel/framework/contracts/filesystem"
@@ -19,6 +20,7 @@ import (
 	"github.com/goravel/framework/contracts/queue"
 	"github.com/goravel/framework/contracts/route"
 	"github.com/goravel/framework/contracts/schedule"
+	"github.com/goravel/framework/contracts/testing"
 	"github.com/goravel/framework/contracts/translation"
 	"github.com/goravel/framework/contracts/validation"
 )
@@ -45,7 +47,9 @@ type Container interface {
 	MakeRoute() route.Engine
 	MakeSchedule() schedule.Schedule
 	MakeStorage() filesystem.Storage
+	MakeTesting() testing.Testing
 	MakeValidation() validation.Validation
+	MakeSeeder() seeder.Facade
 	MakeException() exception.Exception
 	MakeTranslation() translation.Translation
 	MakeWith(key any, parameters map[string]any) (any, error)

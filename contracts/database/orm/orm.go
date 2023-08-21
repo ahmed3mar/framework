@@ -10,6 +10,7 @@ type Orm interface {
 	Connection(name string) Orm
 	DB() (*sql.DB, error)
 	Query() Query
+	Factory() Factory
 	Observe(model any, observer Observer)
 	Transaction(txFunc func(tx Transaction) error) error
 	WithContext(ctx context.Context) Orm
@@ -30,6 +31,7 @@ type Query interface {
 	Driver() Driver
 	Count(count *int64) error
 	Create(value any) error
+	Cursor() (chan Cursor, error)
 	Delete(value any, conds ...any) (*Result, error)
 	Distinct(args ...any) Query
 	Exec(sql string, values ...any) (*Result, error)
@@ -63,6 +65,7 @@ type Query interface {
 	Scopes(funcs ...func(Query) Query) Query
 	Select(query any, args ...any) Query
 	SharedLock() Query
+	Sum(column string, dest any) error
 	Table(name string, args ...any) Query
 	Update(column any, value ...any) (*Result, error)
 	UpdateOrCreate(dest any, attributes any, values any) error
@@ -80,6 +83,11 @@ type Association interface {
 	Delete(values ...any) error
 	Clear() error
 	Count() int64
+}
+
+//go:generate mockery --name=Cursor
+type Cursor interface {
+	Scan(value any) error
 }
 
 type Result struct {

@@ -1,8 +1,8 @@
 package validation
 
 import (
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gookit/validate"
+	"github.com/goravel/framework/contracts/http"
 )
 
 type Errors struct {
@@ -10,7 +10,6 @@ type Errors struct {
 }
 
 func (r *Errors) Error() string {
-	spew.Dump(r.errors)
 	return r.errors.One()
 }
 
@@ -39,4 +38,11 @@ func (r *Errors) All() map[string]map[string]string {
 
 func (r *Errors) Has(key string) bool {
 	return r.errors.HasField(key)
+}
+
+func (r *Errors) Render(ctx http.Context, err error) {
+	ctx.Response().Status(422).Json(http.Json{
+		"message": err.Error(),
+		"errors":  r.All(),
+	})
 }

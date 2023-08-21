@@ -42,7 +42,6 @@ func TestMigrateFreshCommand(t *testing.T) {
 				assert.Nil(t, err)
 				mockConfig = docker.MockConfig
 				createMysqlMigrations()
-
 			},
 		},
 		{
@@ -86,17 +85,45 @@ func TestMigrateFreshCommand(t *testing.T) {
 			test.setup()
 
 			mockContext := &consolemocks.Context{}
-
+			mockArtisan := &consolemocks.Artisan{}
 			migrateCommand := NewMigrateCommand(mockConfig)
 			assert.Nil(t, migrateCommand.Handle(mockContext))
-
-			migrateFreshCommand := NewMigrateFreshCommand(mockConfig)
+			mockContext.On("OptionBool", "seed").Return(false).Once()
+			migrateFreshCommand := NewMigrateFreshCommand(mockConfig, mockArtisan)
 			assert.Nil(t, migrateFreshCommand.Handle(mockContext))
 
 			var agent Agent
 			err := query.Where("name", "goravel").First(&agent)
 			assert.Nil(t, err)
 			assert.True(t, agent.ID > 0)
+
+			// Test MigrateFreshCommand with --seed flag and seeders specified
+			mockContext = &consolemocks.Context{}
+			mockArtisan = &consolemocks.Artisan{}
+			mockContext.On("OptionBool", "seed").Return(true).Once()
+			mockContext.On("OptionSlice", "seeder").Return([]string{"MockSeeder"}).Once()
+			mockArtisan.On("Call", "db:seed --seeder MockSeeder").Return(nil).Once()
+			migrateFreshCommand = NewMigrateFreshCommand(mockConfig, mockArtisan)
+			assert.Nil(t, migrateFreshCommand.Handle(mockContext))
+
+			var agent1 Agent
+			err = query.Where("name", "goravel").First(&agent1)
+			assert.Nil(t, err)
+			assert.True(t, agent1.ID > 0)
+
+			// Test MigrateFreshCommand with --seed flag and no seeders specified
+			mockContext = &consolemocks.Context{}
+			mockArtisan = &consolemocks.Artisan{}
+			mockContext.On("OptionBool", "seed").Return(true).Once()
+			mockContext.On("OptionSlice", "seeder").Return([]string{}).Once()
+			mockArtisan.On("Call", "db:seed").Return(nil).Once()
+			migrateFreshCommand = NewMigrateFreshCommand(mockConfig, mockArtisan)
+			assert.Nil(t, migrateFreshCommand.Handle(mockContext))
+
+			var agent2 Agent
+			err = query.Where("name", "goravel").First(&agent2)
+			assert.Nil(t, err)
+			assert.True(t, agent2.ID > 0)
 
 			if pool != nil && test.name != "sqlite" {
 				assert.Nil(t, pool.Purge(resource))

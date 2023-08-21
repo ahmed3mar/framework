@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/gookit/color"
+	"github.com/goravel/framework/route"
 
 	"github.com/goravel/framework/auth"
 	"github.com/goravel/framework/cache"
@@ -19,6 +20,7 @@ import (
 	consolecontract "github.com/goravel/framework/contracts/console"
 	cryptcontract "github.com/goravel/framework/contracts/crypt"
 	ormcontract "github.com/goravel/framework/contracts/database/orm"
+	seerdercontract "github.com/goravel/framework/contracts/database/seeder"
 	eventcontract "github.com/goravel/framework/contracts/event"
 	filesystemcontract "github.com/goravel/framework/contracts/filesystem"
 	foundationcontract "github.com/goravel/framework/contracts/foundation"
@@ -30,6 +32,7 @@ import (
 	queuecontract "github.com/goravel/framework/contracts/queue"
 	routecontract "github.com/goravel/framework/contracts/route"
 	schedulecontract "github.com/goravel/framework/contracts/schedule"
+	testingcontract "github.com/goravel/framework/contracts/testing"
 	translationcontract "github.com/goravel/framework/contracts/translation"
 	validationcontract "github.com/goravel/framework/contracts/validation"
 	"github.com/goravel/framework/crypt"
@@ -42,8 +45,8 @@ import (
 	goravellog "github.com/goravel/framework/log"
 	"github.com/goravel/framework/mail"
 	"github.com/goravel/framework/queue"
-	"github.com/goravel/framework/route"
 	"github.com/goravel/framework/schedule"
+	"github.com/goravel/framework/testing"
 	"github.com/goravel/framework/translation"
 	"github.com/goravel/framework/validation"
 )
@@ -199,7 +202,7 @@ func (c *Container) MakeMail() mailcontract.Mail {
 }
 
 func (c *Container) MakeOrm() ormcontract.Orm {
-	instance, err := c.Make(database.Binding)
+	instance, err := c.Make(database.BindingOrm)
 	if err != nil {
 		color.Redln(err)
 		return nil
@@ -219,7 +222,7 @@ func (c *Container) MakeQueue() queuecontract.Queue {
 }
 
 func (c *Container) MakeRateLimiter() httpcontract.RateLimiter {
-	instance, err := c.Make(http.Binding)
+	instance, err := c.Make(http.BindingRateLimiter)
 	if err != nil {
 		color.Redln(err)
 		return nil
@@ -258,6 +261,16 @@ func (c *Container) MakeStorage() filesystemcontract.Storage {
 	return instance.(filesystemcontract.Storage)
 }
 
+func (c *Container) MakeTesting() testingcontract.Testing {
+	instance, err := c.Make(testing.Binding)
+	if err != nil {
+		color.Redln(err)
+		return nil
+	}
+
+	return instance.(testingcontract.Testing)
+}
+
 func (c *Container) MakeValidation() validationcontract.Validation {
 	instance, err := c.Make(validation.Binding)
 	if err != nil {
@@ -266,6 +279,17 @@ func (c *Container) MakeValidation() validationcontract.Validation {
 	}
 
 	return instance.(validationcontract.Validation)
+}
+
+func (c *Container) MakeSeeder() seerdercontract.Facade {
+	instance, err := c.Make(database.BindingSeeder)
+
+	if err != nil {
+		color.Redln(err)
+		return nil
+	}
+
+	return instance.(seerdercontract.Facade)
 }
 
 func (c *Container) MakeException() exceptioncontract.Exception {
