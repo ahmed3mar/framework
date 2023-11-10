@@ -52,6 +52,7 @@ type ContextRequest interface {
 	Queries() map[string]string
 
 	// Input retrieves data from the request in the following order: JSON, form, query, and route parameters.
+	Has(key string) bool
 	Input(key string, defaultValue ...string) string
 	InputArray(key string, defaultValue ...[]string) []string
 	InputMap(key string, defaultValue ...map[string]string) map[string]string

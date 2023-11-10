@@ -345,7 +345,9 @@ func (r *QueryImpl) Load(model any, relation string, args ...any) error {
 	}
 
 	copyDest := copyStruct(model)
+
 	query := r.With(relation, args...)
+
 	err := query.Find(model)
 
 	t := destType.Elem()

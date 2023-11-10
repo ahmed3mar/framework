@@ -30,7 +30,7 @@ func GetIDByReflect(t reflect.Type, v reflect.Value) any {
 		if t.Field(i).Name == "Model" && v.Field(i).Type().Kind() == reflect.Struct {
 			structField := v.Field(i).Type()
 			for j := 0; j < structField.NumField(); j++ {
-				if !structField.Field(i).IsExported() {
+				if !structField.Field(j).IsExported() {
 					continue
 				}
 				if strings.Contains(structField.Field(j).Tag.Get("gorm"), "primaryKey") {
@@ -42,6 +42,9 @@ func GetIDByReflect(t reflect.Type, v reflect.Value) any {
 					return id
 				}
 			}
+		}
+		if t.Field(i).Name == "EncodeId" && v.Field(i).Type().Kind() == reflect.Struct {
+			return v.Field(i).FieldByName("ID").Interface()
 		}
 		if strings.Contains(t.Field(i).Tag.Get("gorm"), "primaryKey") {
 			id := v.Field(i).Interface()

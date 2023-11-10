@@ -14,6 +14,7 @@ func copyStruct(dest any) reflect.Value {
 	for i := 0; i < t.NumField(); i++ {
 		destFields = append(destFields, t.Field(i))
 	}
+
 	copyDestStruct := reflect.StructOf(destFields)
 
 	return v.Convert(copyDestStruct)

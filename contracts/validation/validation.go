@@ -39,6 +39,7 @@ type Data interface {
 	Get(key string) (val any, exist bool)
 	// Set the value for a given key.
 	Set(key string, val any) error
+	AddError(key string, rule string, message string)
 }
 
 type Rule interface {

@@ -35,21 +35,26 @@ type Router interface {
 	Middleware(middlewares ...contractshttp.Middleware) Router
 
 	// Any registers a new route responding to all verbs.
-	Any(relativePath string, handler contractshttp.HandlerFunc)
+	Any(relativePath string, handler contractshttp.HandlerFunc) Router
 	// Get registers a new GET route with the router.
-	Get(relativePath string, handler contractshttp.HandlerFunc)
+	Get(relativePath string, handler contractshttp.HandlerFunc) Router
 	// Post registers a new POST route with the router.
-	Post(relativePath string, handler contractshttp.HandlerFunc)
+	Post(relativePath string, handler contractshttp.HandlerFunc) Router
 	// Delete registers a new DELETE route with the router.
-	Delete(relativePath string, handler contractshttp.HandlerFunc)
+	Delete(relativePath string, handler contractshttp.HandlerFunc) Router
 	// Patch registers a new PATCH route with the router.
-	Patch(relativePath string, handler contractshttp.HandlerFunc)
+	Patch(relativePath string, handler contractshttp.HandlerFunc) Router
 	// Put registers a new PUT route with the router.
-	Put(relativePath string, handler contractshttp.HandlerFunc)
+	Put(relativePath string, handler contractshttp.HandlerFunc) Router
 	// Options registers a new OPTIONS route with the router.
-	Options(relativePath string, handler contractshttp.HandlerFunc)
+	Options(relativePath string, handler contractshttp.HandlerFunc) Router
 	// Resource registers RESTful routes for a resource controller.
-	Resource(relativePath string, controller contractshttp.ResourceController)
+	Resource(relativePath string, controller contractshttp.ResourceController) Router
+
+	// Name sets the name for the route that can be used to build URLs.
+	Name(name string) Router
+	// GetRoute returns the route with the provided name.
+	GetRoute(name string, params ...map[string]any) string
 
 	// Static registers a new route with path prefix to serve static files from the provided root directory.
 	Static(relativePath, root string)

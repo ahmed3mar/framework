@@ -16,6 +16,11 @@ type Context struct {
 	Ctx
 }
 
+// SetLocale implements http.Context.
+func (*Context) SetLocale(local string) {
+	panic("unimplemented")
+}
+
 func NewContext() *Context {
 	return &Context{
 		Ctx: context.Background(),

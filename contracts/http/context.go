@@ -26,6 +26,7 @@ type Context interface {
 	Context() context.Context
 	// WithValue add value associated with key in context
 	WithValue(key string, value any)
+	SetLocale(local string)
 	// Request returns the ContextRequest
 	Request() ContextRequest
 	// Response returns the ContextResponse
