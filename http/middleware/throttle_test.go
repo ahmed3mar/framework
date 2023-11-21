@@ -12,14 +12,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	cachemocks "github.com/goravel/framework/contracts/cache/mocks"
-	configmocks "github.com/goravel/framework/contracts/config/mocks"
 	"github.com/goravel/framework/contracts/filesystem"
 	contractshttp "github.com/goravel/framework/contracts/http"
-	httpmocks "github.com/goravel/framework/contracts/http/mocks"
 	"github.com/goravel/framework/contracts/validation"
 	"github.com/goravel/framework/http"
 	"github.com/goravel/framework/http/limit"
+	cachemocks "github.com/goravel/framework/mocks/cache"
+	configmocks "github.com/goravel/framework/mocks/config"
+	httpmocks "github.com/goravel/framework/mocks/http"
 	"github.com/goravel/framework/support/carbon"
 )
 
@@ -219,14 +219,18 @@ func TestThrottle(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			ctx = new(TestContext)
-			mockCache = cachemocks.NewCache(t)
-			mockConfig = configmocks.NewConfig(t)
-			mockRateLimiterFacade = httpmocks.NewRateLimiter(t)
+			mockCache = &cachemocks.Cache{}
+			mockConfig = &configmocks.Config{}
+			mockRateLimiterFacade = &httpmocks.RateLimiter{}
 			http.CacheFacade = mockCache
 			http.ConfigFacade = mockConfig
 			http.RateLimiterFacade = mockRateLimiterFacade
 			test.setup()
 			test.assert()
+
+			mockCache.AssertExpectations(t)
+			mockConfig.AssertExpectations(t)
+			mockRateLimiterFacade.AssertExpectations(t)
 		})
 	}
 }

@@ -7,16 +7,16 @@ import (
 	"time"
 
 	"github.com/gookit/color"
-	"github.com/spf13/cast"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 
-	configmock "github.com/goravel/framework/contracts/config/mocks"
 	"github.com/goravel/framework/contracts/mail"
 	queuecontract "github.com/goravel/framework/contracts/queue"
+	configmock "github.com/goravel/framework/mocks/config"
 	"github.com/goravel/framework/queue"
 	testingdocker "github.com/goravel/framework/support/docker"
+	"github.com/goravel/framework/support/env"
 	"github.com/goravel/framework/support/file"
 )
 
@@ -28,7 +28,7 @@ type ApplicationTestSuite struct {
 }
 
 func TestApplicationTestSuite(t *testing.T) {
-	if testing.Short() {
+	if env.IsWindows() {
 		t.Skip("Skipping tests of using docker")
 	}
 
@@ -37,14 +37,14 @@ func TestApplicationTestSuite(t *testing.T) {
 		return
 	}
 
-	redisPool, redisResource, err := testingdocker.Redis()
-	assert.Nil(t, err)
+	redisDocker := testingdocker.NewRedis()
+	assert.Nil(t, redisDocker.Build())
 
 	suite.Run(t, &ApplicationTestSuite{
-		redisPort: cast.ToInt(redisResource.GetPort("6379/tcp")),
+		redisPort: redisDocker.Config().Port,
 	})
 
-	assert.Nil(t, redisPool.Purge(redisResource))
+	assert.Nil(t, redisDocker.Stop())
 }
 
 func (s *ApplicationTestSuite) SetupTest() {}
