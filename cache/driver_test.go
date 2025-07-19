@@ -10,6 +10,7 @@ import (
 	"github.com/goravel/framework/contracts/cache"
 	"github.com/goravel/framework/contracts/testing/docker"
 	configmock "github.com/goravel/framework/mocks/config"
+	eventmock "github.com/goravel/framework/mocks/event"
 	logmock "github.com/goravel/framework/mocks/log"
 )
 
@@ -17,6 +18,7 @@ type DriverTestSuite struct {
 	suite.Suite
 	driver     *Driver
 	mockConfig *configmock.Config
+	mockEvent  *eventmock.Instance
 	mockLog    *logmock.Log
 }
 
@@ -26,6 +28,7 @@ func TestDriverTestSuite(t *testing.T) {
 
 func (s *DriverTestSuite) SetupTest() {
 	s.mockConfig = &configmock.Config{}
+	s.mockEvent = &eventmock.Instance{}
 	s.mockLog = &logmock.Log{}
 	s.driver = NewDriver(s.mockConfig)
 }
@@ -52,7 +55,7 @@ func (s *DriverTestSuite) TestStore() {
 	s.mockConfig.On("GetString", "cache.stores.memory.driver").Return("memory").Once()
 	s.mockConfig.On("GetString", "cache.prefix").Return("goravel_cache").Once()
 
-	memory, err := NewApplication(s.mockConfig, s.mockLog, "memory")
+	memory, err := NewApplication(s.mockConfig, s.mockEvent, s.mockLog, "memory")
 	s.NotNil(memory)
 	s.Nil(err)
 	s.True(memory.Add("hello", "goravel", 5*time.Second))
