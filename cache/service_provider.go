@@ -37,7 +37,7 @@ func (r *ServiceProvider) Register(app foundation.Application) {
 
 		store := config.GetString("cache.default")
 
-		return NewApplication(config, log, store)
+		return NewApplication(config, app.MakeEvent(), log, store)
 	})
 }
 
