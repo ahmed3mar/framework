@@ -53,6 +53,16 @@ type Driver interface {
 	WithContext(ctx context.Context) Driver
 }
 
+type Repository interface {
+	Driver
+	// Tags returns a new repository instance with tags applied.
+	Tags(tags ...string) Repository
+	// Many retrieve multiple items from the cache by key.
+	Many(keys []string) map[string]any
+	// PutMany store multiple items in the cache for a given time.
+	PutMany(values map[string]any, t time.Duration) error
+}
+
 type Lock interface {
 	// Block attempt to acquire the lock for the given number of seconds.
 	Block(t time.Duration, callback ...func()) bool
